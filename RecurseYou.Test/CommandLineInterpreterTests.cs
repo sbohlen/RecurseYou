@@ -44,7 +44,10 @@ namespace RecurseYou.Test
 
                 Assert.That(Directory.Exists(PATH), Is.False, "PRECONDITION: Directory " + PATH + " should not exist!");
 
-                Assert.Throws<ArgumentException>(() => new CommandLineInterpreter(new[] { "-startpath", PATH }));
+                var interpreter = new CommandLineInterpreter(new[] { "-startpath", PATH });
+
+                string temp;
+                Assert.Throws<ArgumentException>(() => temp = interpreter.StartDirectory);
             }
         }
 
