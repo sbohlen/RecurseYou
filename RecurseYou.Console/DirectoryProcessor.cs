@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
+using RecuseYou;
 
-namespace RecuseYou
+namespace RecurseYou
 {
     public class DirectoryProcessor
     {
@@ -20,7 +22,7 @@ namespace RecuseYou
 
         public void Process()
         {
-            string process = _interpreter.ProcessToExecute;
+            ProcessStartInfo process = _interpreter.ProcessToExecute;
 
             foreach (
                 string directory in
@@ -28,6 +30,7 @@ namespace RecuseYou
             {
                 try
                 {
+                    Console.WriteLine("Processing Directory " + directory);
                     Directory.SetCurrentDirectory(directory);
 
                     if (_interpreter.ProcessEachFileIndividually)

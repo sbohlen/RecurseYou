@@ -8,8 +8,8 @@
     <ProjectGuid>{99B9BBC5-3572-46F6-BD4D-79F76BFCA2D5}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RecuseYou</RootNamespace>
-    <AssemblyName>RecuseYou</AssemblyName>
+    <RootNamespace>RecurseYou</RootNamespace>
+    <AssemblyName>RecurseYou</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>

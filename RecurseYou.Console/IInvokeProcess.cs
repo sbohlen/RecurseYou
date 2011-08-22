@@ -1,7 +1,9 @@
-namespace RecuseYou
+using System.Diagnostics;
+
+namespace RecurseYou
 {
     public interface IInvokeProcess
     {
-        void Invoke(string process);
+        void Invoke(ProcessStartInfo process);
     }
 }

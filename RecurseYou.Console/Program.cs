@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using RecuseYou;
 
-namespace RecuseYou
+namespace RecurseYou
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             var interpreter = new CommandLineInterpreter(args);
             var invoker = new ProcessInvoker();
@@ -17,7 +12,6 @@ namespace RecuseYou
 
             var processor = new DirectoryProcessor(interpreter, fileProcessor, invoker);
             processor.Process();
-
         }
     }
 }

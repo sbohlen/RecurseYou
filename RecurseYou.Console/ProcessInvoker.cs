@@ -1,10 +1,16 @@
-﻿namespace RecuseYou
+﻿using System.Diagnostics;
+
+namespace RecurseYou
 {
     public class ProcessInvoker : IInvokeProcess
     {
-        public void Invoke(string process)
+        #region IInvokeProcess Members
+
+        public void Invoke(ProcessStartInfo process)
         {
-            System.Diagnostics.Process.Start(process);
+            Process.Start(process);
         }
+
+        #endregion
     }
 }

@@ -1,6 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
 
-namespace RecuseYou
+namespace RecurseYou
 {
     public class FileProcessor
     {
@@ -12,11 +14,14 @@ namespace RecuseYou
             _processInvoker = processInvoker;
         }
 
-        public void Process(string directory, string process, string wildcard)
+        public void Process(string directory, ProcessStartInfo process, string wildcard)
         {
             foreach (string file in Directory.EnumerateFiles(directory, wildcard, SearchOption.TopDirectoryOnly))
             {
-                string fileProcess = process.Replace(SUBSTITUTION_PATTERN, file);
+                Console.WriteLine("Processing file " + file);
+                var fileProcess = new ProcessStartInfo(process.FileName);
+                fileProcess.Arguments = process.Arguments.Replace(SUBSTITUTION_PATTERN, file);
+
                 _processInvoker.Invoke(fileProcess);
             }
         }

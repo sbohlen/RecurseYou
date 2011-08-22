@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,7 @@ namespace RecuseYou
         private const string PROCESS_EACH_FILE_FLAG = "-eachfile";
 
         private readonly string[] _commandLineArgs;
-        private string _processToExecute;
+        private ProcessStartInfo _processToExecute;
         private string _startDirectory;
 
         public CommandLineInterpreter(string[] commandLineArgs)
@@ -43,11 +44,11 @@ namespace RecuseYou
             get { return _commandLineArgs.Any(arg => arg.ToLowerInvariant() == CONTINUE_ON_ERROR_FLAG); }
         }
 
-        public string ProcessToExecute
+        public ProcessStartInfo ProcessToExecute
         {
             get
             {
-                if (string.IsNullOrWhiteSpace(_processToExecute))
+                if (_processToExecute == null)
                 {
                     SetupProcessToExecute();
                 }
@@ -63,6 +64,7 @@ namespace RecuseYou
 
         public string DirectoryWildcard
         {
+            //TODO: permit this to be passed in via command-line option at some future point
             get { return "*"; }
         }
 
@@ -70,7 +72,7 @@ namespace RecuseYou
         {
             var commandLine = new StringBuilder();
 
-            for (int i = index; i < _commandLineArgs.Length; i++)
+            for (int i = index + 1; i < _commandLineArgs.Length; i++)
             {
                 commandLine.Append(_commandLineArgs[i] + " ");
             }
@@ -102,7 +104,15 @@ namespace RecuseYou
 
         private void SetupProcessToExecute()
         {
-            _processToExecute = ConcatenateAllArgumentsAfter(ProcessStartIndex());
+            int processStartIndex = ProcessStartIndex();
+
+            string processAsSpecified = _commandLineArgs[processStartIndex];
+            string fullPathToProcess = Path.GetFullPath(processAsSpecified);
+
+            _processToExecute = new ProcessStartInfo(fullPathToProcess)
+                                    {
+                                        Arguments = ConcatenateAllArgumentsAfter(processStartIndex)
+                                    };
         }
 
         private void SetupStartDirectory()
