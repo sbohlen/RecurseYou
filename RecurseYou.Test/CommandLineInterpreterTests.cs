@@ -1,0 +1,115 @@
+using System;
+using System.IO;
+using NUnit.Framework;
+using RecuseYou;
+
+namespace RecurseYou.Test
+{
+    [TestFixture]
+    public class CommandLineInterpreterTests
+    {
+        [TestFixture]
+        public class When_Continue_On_Error_Flag_Is_Set
+        {
+            [Test]
+            [TestCase("-CONTINUEONERROR", "All UPPERCASE Argument Failed!")]
+            [TestCase("-continueonerror", "All lowercase Argument Failed!")]
+            [TestCase("-ContinueOnError", "PascalCased Argument Failed!")]
+            public void Reports_Proper_Continue_On_Error_Status(string arg, string failureMessage)
+            {
+                var interpreter = new CommandLineInterpreter(new[] { arg });
+                Assert.That(interpreter.ShouldContinueOnError, Is.True, failureMessage);
+            }
+        }
+
+        [TestFixture]
+        public class When_Start_Path_Flag_Is_Set_To_A_Valid_Folder
+        {
+            [Test]
+            public void Reports_Proper_Start_Folder()
+            {
+                const string PATH = @"c:\";
+
+                var interpreter = new CommandLineInterpreter(new[] { "-startpath", PATH });
+                Assert.That(interpreter.StartDirectory, Is.EqualTo(PATH));
+            }
+        }
+        [TestFixture]
+        public class When_Start_Path_Flag_Is_Set_To_An_Invalid_Folder
+        {
+            [Test]
+            public void Reports_Invalid_Folder()
+            {
+                const string PATH = @"c:\this_folder_does_not_exist";
+
+                Assert.That(Directory.Exists(PATH), Is.False, "PRECONDITION: Directory " + PATH + " should not exist!");
+
+                Assert.Throws<ArgumentException>(() => new CommandLineInterpreter(new[] { "-startpath", PATH }));
+            }
+        }
+
+        [TestFixture]
+        public class When_Passing_Process_CommandLine_Only
+        {
+            [Test]
+            public void Can_Return_Expected_CommandLine()
+            {
+                var interpreter = new CommandLineInterpreter(new[] { @"c:\test\process.exe", "/s", "/e" });
+                Assert.That(interpreter.ProcessToExecute, Is.EqualTo(@"c:\test\process.exe /s /e"));
+            }
+        }
+
+        [TestFixture]
+        public class When_Passing_Process_Start_Path_and_CommandLine
+        {
+            [Test]
+            public void Can_Return_Expected_CommandLine()
+            {
+                var interpreter = new CommandLineInterpreter(new[] { "-startpath", @"c:\", @"c:\test\process.exe", "/s", "/e" });
+                Assert.That(interpreter.ProcessToExecute, Is.EqualTo(@"c:\test\process.exe /s /e"));
+            }
+        }
+
+        [TestFixture]
+        public class When_Passing_Continue_On_Error_and_CommandLine
+        {
+            [Test]
+            public void Can_Return_Expected_CommandLine()
+            {
+                var interpreter = new CommandLineInterpreter(new[] { "-continueOnError", @"c:\test\process.exe", "/s", "/e" });
+                Assert.That(interpreter.ProcessToExecute, Is.EqualTo(@"c:\test\process.exe /s /e"));
+            }
+        }
+
+        [TestFixture]
+        public class When_Passing_Each_File_and_CommandLine
+        {
+            [Test]
+            public void Can_Return_Expected_CommandLine()
+            {
+                var interpreter = new CommandLineInterpreter(new[] { "-eachFile", @"c:\test\process.exe", "/s", "/e" });
+                Assert.That(interpreter.ProcessToExecute, Is.EqualTo(@"c:\test\process.exe /s /e"));
+            }
+        }
+
+        [TestFixture]
+        public class When_Passing_Continue_On_Error_and_Start_Path_and_Each_File_and_CommandLine
+        {
+            [Test]
+            public void Can_Return_Expected_CommandLine()
+            {
+                var interpreter = new CommandLineInterpreter(new[] { "-startPath", @"c:\", "-eachfile", "-continueOnError", @"c:\test\process.exe", "/s", "/e" });
+                Assert.That(interpreter.ProcessToExecute, Is.EqualTo(@"c:\test\process.exe /s /e"));
+            }
+        }
+
+        [Test]
+        public void CanCreateInstance()
+        {
+            string[] args = new string[] { };
+            var interpreter = new CommandLineInterpreter(args);
+
+            Assert.That(interpreter, Is.Not.Null);
+        }
+    }
+}
