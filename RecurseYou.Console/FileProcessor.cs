@@ -5,9 +5,9 @@ namespace RecuseYou
     public class FileProcessor
     {
         private const string SUBSTITUTION_PATTERN = "--filename--";
-        private ProcessInvoker _processInvoker;
+        private readonly IInvokeProcess _processInvoker;
 
-        public FileProcessor(ProcessInvoker processInvoker)
+        public FileProcessor(IInvokeProcess processInvoker)
         {
             _processInvoker = processInvoker;
         }
@@ -16,7 +16,7 @@ namespace RecuseYou
         {
             foreach (string file in Directory.EnumerateFiles(directory, wildcard, SearchOption.TopDirectoryOnly))
             {
-                var fileProcess = process.Replace(SUBSTITUTION_PATTERN, file);
+                string fileProcess = process.Replace(SUBSTITUTION_PATTERN, file);
                 _processInvoker.Invoke(fileProcess);
             }
         }

@@ -12,17 +12,12 @@ namespace RecuseYou
         private const string PROCESS_EACH_FILE_FLAG = "-eachfile";
 
         private readonly string[] _commandLineArgs;
-        private string _startDirectory;
         private string _processToExecute;
+        private string _startDirectory;
 
         public CommandLineInterpreter(string[] commandLineArgs)
         {
             _commandLineArgs = commandLineArgs;
-        }
-
-        private void SetupProcessToExecute()
-        {
-            _processToExecute = ConcatenateAllArgumentsAfter(ProcessStartIndex());
         }
 
         protected bool StartPathSpecified
@@ -66,6 +61,11 @@ namespace RecuseYou
             get { return _commandLineArgs.Any(args => args.ToLowerInvariant() == PROCESS_EACH_FILE_FLAG); }
         }
 
+        public string DirectoryWildcard
+        {
+            get { return "*"; }
+        }
+
         private string ConcatenateAllArgumentsAfter(int index)
         {
             var commandLine = new StringBuilder();
@@ -100,12 +100,17 @@ namespace RecuseYou
             return index;
         }
 
+        private void SetupProcessToExecute()
+        {
+            _processToExecute = ConcatenateAllArgumentsAfter(ProcessStartIndex());
+        }
+
         private void SetupStartDirectory()
         {
             if (StartPathSpecified)
             {
                 int index =
-                    _commandLineArgs.Select((value, i) => new { Value = value, Index = i }).First(
+                    _commandLineArgs.Select((value, i) => new {Value = value, Index = i}).First(
                         instance => instance.Value.ToLowerInvariant() == START_FOLDER_FLAG).Index;
 
                 if (_commandLineArgs.Length <= index)

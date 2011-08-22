@@ -1,6 +1,6 @@
 ﻿namespace RecuseYou
 {
-    public class ProcessInvoker
+    public class ProcessInvoker : IInvokeProcess
     {
         public void Invoke(string process)
         {

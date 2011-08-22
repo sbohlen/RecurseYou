@@ -5,11 +5,12 @@ namespace RecuseYou
 {
     public class DirectoryProcessor
     {
-        private readonly CommandLineInterpreter _interpreter;
         private readonly FileProcessor _fileProcessor;
-        private ProcessInvoker _processInvoker;
+        private readonly CommandLineInterpreter _interpreter;
+        private readonly IInvokeProcess _processInvoker;
 
-        public DirectoryProcessor(CommandLineInterpreter interpreter, FileProcessor fileProcessor, ProcessInvoker processInvoker)
+        public DirectoryProcessor(CommandLineInterpreter interpreter, FileProcessor fileProcessor,
+                                  IInvokeProcess processInvoker)
         {
             _interpreter = interpreter;
             _processInvoker = processInvoker;
@@ -21,7 +22,9 @@ namespace RecuseYou
         {
             string process = _interpreter.ProcessToExecute;
 
-            foreach (string directory in Directory.EnumerateDirectories(_interpreter.StartDirectory, "*", SearchOption.AllDirectories))
+            foreach (
+                string directory in
+                    Directory.EnumerateDirectories(_interpreter.StartDirectory, "*", SearchOption.AllDirectories))
             {
                 try
                 {
@@ -29,13 +32,12 @@ namespace RecuseYou
 
                     if (_interpreter.ProcessEachFileIndividually)
                     {
-                        _fileProcessor.Process(directory, process, "*.*");
+                        _fileProcessor.Process(directory, process, _interpreter.DirectoryWildcard);
                     }
                     else
                     {
                         _processInvoker.Invoke(process);
                     }
-
                 }
                 catch (Exception ex)
                 {
@@ -43,7 +45,8 @@ namespace RecuseYou
                     {
                         string message = ex.Message ?? "UNKNOWN";
 
-                        Console.WriteLine("Continuing after error: {0} while processing directory {1}", message, directory);
+                        Console.WriteLine("Continuing after error: {0} while processing directory {1}", message,
+                                          directory);
                     }
                     else
                     {
