@@ -10,8 +10,8 @@ namespace RecurseYou.Test
         [Test]
         public void CanCreateInstance()
         {
-            var commandLineArgs = new string[] {};
-            var directoryProcessor = new DirectoryProcessor(new CommandLineInterpreter(commandLineArgs), new FileProcessor());
+            var commandLineArgs = new string[] { };
+            var directoryProcessor = new DirectoryProcessor(new CommandLineInterpreter(commandLineArgs), new FileProcessor(new ProcessInvoker()), new ProcessInvoker());
             Assert.That(directoryProcessor, Is.Not.Null);
         }
     }

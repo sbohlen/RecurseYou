@@ -11,7 +11,11 @@ namespace RecuseYou
     {
         static void Main(string[] args)
         {
-            var processor = new DirectoryProcessor(new CommandLineInterpreter(args), new FileProcessor());
+            var interpreter = new CommandLineInterpreter(args);
+            var invoker = new ProcessInvoker();
+            var fileProcessor = new FileProcessor(invoker);
+
+            var processor = new DirectoryProcessor(interpreter, fileProcessor, invoker);
             processor.Process();
 
         }
