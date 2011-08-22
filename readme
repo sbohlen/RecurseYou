@@ -1,0 +1,36 @@
+usage:
+
+C:\> RecurseYou <options> <command-line-to-execute>
+
+Options:
+(note: option flags are NOT case-sensitive so -startPath, -startpath, and -StaRTPaTH are all equivalent)
+
+-startPath <path>
+	<path> from which to begin recursively executing <command-line-to-execute>; defaults to current directory
+
+-continueOnError
+	processing will continue if there is an error; default behavior is to stop at the first error condition
+	
+-eachFile
+	apply the <command-line-to-execute> to each individual file in each subdirectory as its processed
+	
+	
+Command-Line-To-Execute
+	* any valid executable command-line may be used
+	* if invoking a shell operation, ensure that you begin with "cmd.exe /c" to invoke the shell command processor with the close-when-completed flag (see examples for more details)
+	
+Examples:
+
+RecurseYou cmd.exe /c del *.bak
+	* delete all files in the current folder and all subfolders beneath it matching the *.bak wildcard
+	* halt processing on the first error condition
+	
+RecurseYou -startPath c:\temp -continueOnError cmd.exe /c del *.bak
+	* delete all files in the c:\temp folder and all subfolders beneath it matching the *.bak wildcard
+	* continue processing if an error condition is encountered
+	
+RecurseYou -startPath c:\source -continueOnError -eachFile unzip.exe --filename-- c:\destination
+	* in this example, unzip.exe is a hypothetical command-line util that unzips zip files
+	* invoke unzip.exe to unzip each file in c:\source and all subfolders beneath it to c:\destination
+	* files in each subfolder will be passed to the command-line unzip.exe one at a time with the actual filename being substituted for the "--filename--" placeholder text, making the resultant example command-line something like "unzip.exe c:\source\test.zip c:\destination"
+	* continue processing if an error condition is encountered
