@@ -7,10 +7,12 @@ namespace RecuseYou
     {
         private readonly CommandLineInterpreter _interpreter;
         private readonly FileProcessor _fileProcessor;
+        private ProcessInvoker _processInvoker;
 
-        public DirectoryProcessor(CommandLineInterpreter interpreter, FileProcessor fileProcessor)
+        public DirectoryProcessor(CommandLineInterpreter interpreter, FileProcessor fileProcessor, ProcessInvoker processInvoker)
         {
             _interpreter = interpreter;
+            _processInvoker = processInvoker;
             _fileProcessor = fileProcessor;
         }
 
@@ -31,7 +33,7 @@ namespace RecuseYou
                     }
                     else
                     {
-                        System.Diagnostics.Process.Start(process);
+                        _processInvoker.Invoke(process);
                     }
 
                 }

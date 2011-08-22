@@ -46,6 +46,7 @@
     <Compile Include="CommandLineInterpreter.cs" />
     <Compile Include="DirectoryProcessor.cs" />
     <Compile Include="FileProcessor.cs" />
+    <Compile Include="ProcessInvoker.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
