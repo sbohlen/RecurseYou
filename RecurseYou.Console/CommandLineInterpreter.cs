@@ -13,34 +13,55 @@ namespace RecuseYou
 
         private readonly string[] _commandLineArgs;
         private string _startDirectory;
+        private string _processToExecute;
 
         public CommandLineInterpreter(string[] commandLineArgs)
         {
             _commandLineArgs = commandLineArgs;
-            SetupStartDirectory();
         }
 
-        protected bool SpecifiesStartPath
+        private void SetupProcessToExecute()
+        {
+            _processToExecute = ConcatenateAllArgumentsAfter(ProcessStartIndex());
+        }
+
+        protected bool StartPathSpecified
         {
             get { return _commandLineArgs.Any(arg => arg.ToLowerInvariant() == START_FOLDER_FLAG); }
         }
 
         public string StartDirectory
         {
-            get { return _startDirectory; }
+            get
+            {
+                if (string.IsNullOrWhiteSpace(_startDirectory))
+                {
+                    SetupStartDirectory();
+                }
+
+                return _startDirectory;
+            }
         }
 
-        public bool ShouldContinueOnError
+        public bool ContinueOnError
         {
             get { return _commandLineArgs.Any(arg => arg.ToLowerInvariant() == CONTINUE_ON_ERROR_FLAG); }
         }
 
         public string ProcessToExecute
         {
-            get { return ConcatenateAllArgumentsAfter(GetProcessStartIndex()); }
+            get
+            {
+                if (string.IsNullOrWhiteSpace(_processToExecute))
+                {
+                    SetupProcessToExecute();
+                }
+
+                return _processToExecute;
+            }
         }
 
-        public bool ShouldProcessEachFileIndividually
+        public bool ProcessEachFileIndividually
         {
             get { return _commandLineArgs.Any(args => args.ToLowerInvariant() == PROCESS_EACH_FILE_FLAG); }
         }
@@ -57,21 +78,21 @@ namespace RecuseYou
             return commandLine.ToString().Trim();
         }
 
-        private int GetProcessStartIndex()
+        private int ProcessStartIndex()
         {
             int index = 0;
 
-            if (ShouldContinueOnError)
+            if (ContinueOnError)
             {
                 index++;
             }
 
-            if (SpecifiesStartPath)
+            if (StartPathSpecified)
             {
                 index = index + 2;
             }
 
-            if (ShouldProcessEachFileIndividually)
+            if (ProcessEachFileIndividually)
             {
                 index++;
             }
@@ -81,7 +102,7 @@ namespace RecuseYou
 
         private void SetupStartDirectory()
         {
-            if (SpecifiesStartPath)
+            if (StartPathSpecified)
             {
                 int index =
                     _commandLineArgs.Select((value, i) => new { Value = value, Index = i }).First(
@@ -109,7 +130,7 @@ namespace RecuseYou
             if (!Directory.Exists(_startDirectory))
             {
                 throw new ArgumentException(
-                    string.Format("The specified {0} folder of {1} does not exist or is inaccessible!",
+                    string.Format("The specified {0} folder of \"{1}\" does not exist or is inaccessible!",
                                   START_FOLDER_FLAG, _startDirectory));
             }
         }

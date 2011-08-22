@@ -18,7 +18,7 @@ namespace RecurseYou.Test
             public void Reports_Proper_Continue_On_Error_Status(string arg, string failureMessage)
             {
                 var interpreter = new CommandLineInterpreter(new[] { arg });
-                Assert.That(interpreter.ShouldContinueOnError, Is.True, failureMessage);
+                Assert.That(interpreter.ContinueOnError, Is.True, failureMessage);
             }
         }
 

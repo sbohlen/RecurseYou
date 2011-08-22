@@ -25,7 +25,7 @@ namespace RecuseYou
                 {
                     Directory.SetCurrentDirectory(directory);
 
-                    if (_interpreter.ShouldProcessEachFileIndividually)
+                    if (_interpreter.ProcessEachFileIndividually)
                     {
                         _fileProcessor.Process(directory, process, "*.*");
                     }
@@ -37,7 +37,7 @@ namespace RecuseYou
                 }
                 catch (Exception ex)
                 {
-                    if (_interpreter.ShouldContinueOnError)
+                    if (_interpreter.ContinueOnError)
                     {
                         string message = ex.Message ?? "UNKNOWN";
 
